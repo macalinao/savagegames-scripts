@@ -1,5 +1,5 @@
 #!/bin/sh
-SERVER_IP=192.168.1.95
+SERVER_IP=127.0.0.1
 # Flushing all rules
 iptables -F
 iptables -X
