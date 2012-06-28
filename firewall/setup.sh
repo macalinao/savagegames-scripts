@@ -1,34 +1,33 @@
 #!/bin/sh
-SERVER_IP=127.0.0.1
-# Flushing all rules
+echo Setting up the firewall...
+
+echo Flushing all rules
 iptables -F
 iptables -X
-# Setting default filter policy
+
+echo Setting default filter policy
 iptables -P INPUT DROP
 iptables -P OUTPUT DROP
 iptables -P FORWARD DROP
-# Allow unlimited traffic on loopback
+
+echo Allow unlimited traffic on loopback
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A OUTPUT -o lo -j ACCEPT
-#allow http
+
+echo allow http
 sudo iptables -A INPUT -p udp -m udp --sport 53 -j ACCEPT
 sudo iptables -A INPUT -p tcp -m tcp --sport 80 -j ACCEPT
 
-#allow inbound
+echo allow inbound
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-# Allow incoming ssh only
-iptables -A INPUT -p tcp -s 0/0 -d $SERVER_IP --sport 513:65535 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A OUTPUT -p tcp -s $SERVER_IP -d 0/0 --sport 22 --dport 513:65535 -m state --state ESTABLISHED -j ACCEPT
+echo Allow incoming ssh only
+iptables -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
 
-#allow minecraft
+echo allow minecraft
 iptables -A INPUT -p tcp --dport 25565 -j ACCEPT
 iptables -A OUTPUT -p tcp --dport 25565 -j ACCEPT
 
-#allow website
-iptables -A INPUT -p tcp --dport 80 -j ACCEPT
-iptables -A OUTPUT -p tcp --dport 80 -j ACCEPT
-
-# make sure nothing comes or goes out of this box
+echo make sure nothing comes or goes out of this box
 iptables -A INPUT -j DROP
 iptables -A OUTPUT -j DROP
