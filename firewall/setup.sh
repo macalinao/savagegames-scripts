@@ -25,6 +25,10 @@ iptables -A OUTPUT -p tcp -s $SERVER_IP -d 0/0 --sport 22 --dport 513:65535 -m s
 iptables -A INPUT -p tcp --dport 25565 -j ACCEPT
 iptables -A OUTPUT -p tcp --dport 25565 -j ACCEPT
 
+#allow website
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 80 -j ACCEPT
+
 # make sure nothing comes or goes out of this box
 iptables -A INPUT -j DROP
 iptables -A OUTPUT -j DROP
